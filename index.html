@@ -1,0 +1,1788 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f172a">
+  <title>Treinos — Periodização 3</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --surface: #ffffff;
+      --surface-2: #f9fafb;
+      --text: #101828;
+      --muted: #667085;
+      --line: #e4e7ec;
+      --brand: #0f172a;
+      --brand-soft: #eef2ff;
+      --accent: #2563eb;
+      --success: #027a48;
+      --warning: #b54708;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 8px 28px rgba(15, 23, 42, .08);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(37, 99, 235, .10), transparent 36rem),
+        var(--bg);
+      line-height: 1.45;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .app {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 18px 14px calc(32px + var(--safe-bottom));
+    }
+
+    .hero {
+      padding: 28px 18px;
+      border: 1px solid rgba(255,255,255,.78);
+      border-radius: 26px;
+      background: linear-gradient(135deg, #172231 0%, #1e2e45 52%, #214da3 100%);
+      color: #fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+      min-height: 314px;
+      display: flex;
+      align-items: center;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 260px;
+      height: 260px;
+      right: -70px;
+      top: -60px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      filter: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.26);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.10);
+      font-size: 12px;
+      font-weight: 850;
+      letter-spacing: -.01em;
+      text-transform: none;
+    }
+
+    .hero h1 {
+      margin: 18px 0 8px;
+      font-size: clamp(46px, 8.4vw, 72px);
+      line-height: .94;
+      letter-spacing: -.065em;
+      font-weight: 900;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 760px;
+      color: rgba(255,255,255,.92);
+      font-size: 16px;
+      line-height: 1.45;
+    }
+
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      max-width: 650px;
+      margin-top: 22px;
+    }
+
+    .hero-stat {
+      min-height: 72px;
+      padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(255,255,255,.09);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 24px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: -.04em;
+    }
+
+    .hero-stat span {
+      display: block;
+      margin-top: 7px;
+      color: rgba(255,255,255,.92);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .tabs-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: 14px -14px 0;
+      padding: 10px 14px;
+      background: rgba(246, 247, 251, .88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(228, 231, 236, .75);
+    }
+
+    .tabs, .jump-nav {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 2px;
+    }
+
+    .tabs::-webkit-scrollbar, .jump-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn, .jump-btn {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 13px;
+      font-weight: 750;
+      font-size: 13px;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+
+    .tab-btn:active, .jump-btn:active {
+      transform: scale(.98);
+    }
+
+    .tab-btn.active {
+      background: var(--brand);
+      border-color: var(--brand);
+      color: #fff;
+    }
+
+    .jump-panel {
+      margin-top: 10px;
+      padding: 10px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, .05);
+    }
+
+    .jump-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+
+    .jump-btn {
+      background: var(--surface-2);
+      padding: 9px 12px;
+    }
+
+    .jump-btn:hover, .jump-btn.active {
+      background: var(--brand-soft);
+      border-color: #c7d2fe;
+      color: #1d4ed8;
+    }
+
+    .tab-content {
+      display: none;
+      padding-top: 18px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .workout-section {
+      scroll-margin-top: 132px;
+      margin: 0 0 22px;
+    }
+
+    .workout-title {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin: 8px 0 14px;
+    }
+
+    .workout-title span {
+      color: var(--accent);
+      font-weight: 850;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: .08em;
+    }
+
+    .workout-title h2 {
+      margin: 0;
+      font-size: clamp(22px, 5vw, 34px);
+      letter-spacing: -.03em;
+    }
+
+
+    .muscle-groups {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .muscle-chip {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--muted);
+      padding: 5px 9px;
+      font-size: 12px;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .section-label {
+      margin: 18px 0 10px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .combo-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, .045);
+      margin-bottom: 12px;
+    }
+
+    .combo-card.is-combo {
+      border-color: rgba(37, 99, 235, .22);
+      background: linear-gradient(180deg, #fff, #fbfdff);
+    }
+
+    .combo-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .mini-label {
+      display: inline-block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 4px;
+    }
+
+    .combo-head h3 {
+      margin: 0;
+      font-size: 16px;
+      letter-spacing: -.02em;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .combo-head h3 em {
+      font-style: normal;
+      color: var(--accent);
+      background: var(--brand-soft);
+      border: 1px solid #dbeafe;
+      border-radius: 999px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 850;
+    }
+
+    .rest-badge {
+      flex: 0 0 auto;
+      max-width: 180px;
+      text-align: right;
+      color: var(--warning);
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+      border-radius: 999px;
+      padding: 6px 9px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .combo-note {
+      margin: 10px 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .exercise-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      overflow: hidden;
+      min-width: 0;
+    }
+
+    .exercise-main {
+      padding: 12px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+    }
+
+    .exercise-code {
+      display: inline-flex;
+      min-width: 34px;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 3px 7px;
+      margin-bottom: 7px;
+      color: var(--success);
+      background: #ecfdf3;
+      border: 1px solid #abefc6;
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .exercise-main h4 {
+      margin: 0;
+      font-size: 15px;
+      letter-spacing: -.02em;
+    }
+
+    .sets {
+      flex: 0 0 auto;
+      color: var(--text);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 12px;
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .video-card {
+      display: grid;
+      grid-template-columns: 92px 1fr;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      background: #f8fafc;
+      border-top: 1px solid var(--line);
+    }
+
+    .video-card img {
+      width: 92px;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #e5e7eb;
+      display: block;
+    }
+
+    .video-meta {
+      min-width: 0;
+    }
+
+    .video-meta span {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .video-meta strong {
+      display: block;
+      margin-top: 3px;
+      font-size: 13px;
+      color: #1d4ed8;
+    }
+
+    .notes-card, .empty-card {
+      margin-top: 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, .045);
+    }
+
+    .notes-card h2, .empty-card h2 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      letter-spacing: -.02em;
+    }
+
+    .notes-card p, .empty-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .empty-card {
+      text-align: center;
+      padding: 32px 18px;
+    }
+
+    .footer-space {
+      height: 22px;
+    }
+
+    @media (max-width: 760px) {
+      .app {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .hero {
+        padding: 28px 18px;
+        min-height: 300px;
+        border-radius: 24px;
+      }
+
+      .hero h1 {
+        font-size: clamp(42px, 14vw, 60px);
+      }
+
+      .hero p {
+        font-size: 15px;
+      }
+
+      .hero-stats {
+        grid-template-columns: 1fr;
+        max-width: none;
+        gap: 8px;
+      }
+
+      .hero-stat {
+        min-height: 62px;
+      }
+
+      .tabs-wrap {
+        margin-left: -12px;
+        margin-right: -12px;
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .exercise-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .combo-head {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .rest-badge {
+        max-width: none;
+        width: fit-content;
+        text-align: left;
+      }
+
+      .workout-section {
+        scroll-margin-top: 150px;
+      }
+    }
+
+    @media (max-width: 390px) {
+      .video-card {
+        grid-template-columns: 82px 1fr;
+      }
+
+      .video-card img {
+        width: 82px;
+      }
+
+      .tab-btn, .jump-btn {
+        font-size: 12px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div class="hero-content">
+        <span class="eyebrow">Matheus de Farias • treino atual</span>
+        <h1>Treinos ABCD</h1>
+        <p>Consulta rápida para celular com aquecimento, parte principal, blocos combinados, séries, descansos e links de vídeo para execução dos exercícios.</p>
+        <div class="hero-stats" aria-label="Resumo do treino atual">
+          <div class="hero-stat">
+            <strong>3ª</strong>
+            <span>periodização ativa</span>
+          </div>
+          <div class="hero-stat">
+            <strong>4</strong>
+            <span>treinos diferentes</span>
+          </div>
+          <div class="hero-stat">
+            <strong>ABCD</strong>
+            <span>divisão atual</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="tabs-wrap">
+      <nav class="tabs" aria-label="Abas de periodização">
+        <button class="tab-btn active" data-tab="periodizacao-3">Periodização 3</button>
+        <button class="tab-btn" data-tab="periodizacao-2">Periodização 2</button>
+        <button class="tab-btn" data-tab="periodizacao-1">Periodização 1</button>
+      </nav>
+
+      <section class="jump-panel" data-jump-panel="periodizacao-3">
+        <div class="jump-title">
+          <span>Ir para o treino</span>
+          <span>ABCD</span>
+        </div>
+        <nav class="jump-nav" aria-label="Filtro de treinos da Periodização 3">
+          <button class="jump-btn" data-target="treino-1">Treino 1</button>
+<button class="jump-btn" data-target="treino-2">Treino 2</button>
+<button class="jump-btn" data-target="treino-3">Treino 3</button>
+<button class="jump-btn" data-target="treino-4">Treino 4</button>
+        </nav>
+      </section>
+    </div>
+
+    <section class="tab-content active" id="periodizacao-3">
+      
+    <section class="workout-section" id="treino-1">
+      <div class="workout-title">
+        <span>Treino 1</span>
+        <h2>Costas, puxadas e remadas</h2>
+        <div class="muscle-groups" aria-label="Grupos musculares trabalhados no Treino 1">
+          <span class="muscle-chip">Costas / dorsais</span>
+          <span class="muscle-chip">Romboides</span>
+          <span class="muscle-chip">Trapézio</span>
+          <span class="muscle-chip">Deltoide posterior</span>
+          <span class="muscle-chip">Bíceps e antebraços</span>
+          <span class="muscle-chip">Core e escápulas</span>
+        </div>
+      </div>
+      <div class="section-label">Aquecimento / Preparação</div>
+      
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Preparação do movimento</span>
+          <h3>↻ Bloco 1 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">Descanso não informado</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">1.1</span>
+          <h4>Floor slide</h4>
+        </div>
+        <span class="sets">2x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=00xwIpFk6r0" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Floor slide no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/00xwIpFk6r0/hqdefault.jpg" alt="Thumbnail do vídeo: Floor slide" onerror="this.src='https://img.youtube.com/vi/00xwIpFk6r0/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">1.2</span>
+          <h4>Perdigueiro</h4>
+        </div>
+        <span class="sets">2x 8/8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=Sde9Gd-4i9c" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Perdigueiro no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/Sde9Gd-4i9c/hqdefault.jpg" alt="Thumbnail do vídeo: Perdigueiro" onerror="this.src='https://img.youtube.com/vi/Sde9Gd-4i9c/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Preparação do movimento</span>
+          <h3>↻ Bloco 2 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">30s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">2.1</span>
+          <h4>Chop polia alta</h4>
+        </div>
+        <span class="sets">2x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=cxq2nufSzOU" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Chop polia alta no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/cxq2nufSzOU/hqdefault.jpg" alt="Thumbnail do vídeo: Chop polia alta" onerror="this.src='https://img.youtube.com/vi/cxq2nufSzOU/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">2.2</span>
+          <h4>Scapular pull up</h4>
+        </div>
+        <span class="sets">2x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=-ZIpSoTRsuE" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Scapular pull up no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/-ZIpSoTRsuE/hqdefault.jpg" alt="Thumbnail do vídeo: Scapular pull up" onerror="this.src='https://img.youtube.com/vi/-ZIpSoTRsuE/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+      <div class="section-label">Treino principal</div>
+      
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>↻ Bloco 3 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">90s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">3.1</span>
+          <h4>Remada curvada unilateral halter</h4>
+        </div>
+        <span class="sets">3x 6/6</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=u3FtsYEUM3k" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Remada curvada unilateral halter no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/u3FtsYEUM3k/hqdefault.jpg" alt="Thumbnail do vídeo: Remada curvada unilateral halter" onerror="this.src='https://img.youtube.com/vi/u3FtsYEUM3k/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">3.2</span>
+          <h4>Crucifixo inverso halteres pegada neutra</h4>
+        </div>
+        <span class="sets">3x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=4uBKYg7C0vw" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Crucifixo inverso halteres pegada neutra no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/4uBKYg7C0vw/hqdefault.jpg" alt="Thumbnail do vídeo: Crucifixo inverso halteres pegada neutra" onerror="this.src='https://img.youtube.com/vi/4uBKYg7C0vw/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card ">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>• Bloco 4 <em>Individual</em></h3>
+        </div>
+        <div class="rest-badge">90s após o exercício</div>
+      </div>
+      <p class='combo-note'>Execute este exercício e faça o descanso indicado.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">4</span>
+          <h4>Puxada barra romana</h4>
+        </div>
+        <span class="sets">3x 6-8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=WcHFsm-LLuo" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Puxada barra romana no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/WcHFsm-LLuo/hqdefault.jpg" alt="Thumbnail do vídeo: Puxada barra romana" onerror="this.src='https://img.youtube.com/vi/WcHFsm-LLuo/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>↻ Bloco 5 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">90s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">5.1</span>
+          <h4>Puxada aberta</h4>
+        </div>
+        <span class="sets">3x 6-8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=j9__C0F4FAk" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Puxada aberta no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/j9__C0F4FAk/hqdefault.jpg" alt="Thumbnail do vídeo: Puxada aberta" onerror="this.src='https://img.youtube.com/vi/j9__C0F4FAk/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">5.2</span>
+          <h4>Remada curvada neutra com halteres</h4>
+        </div>
+        <span class="sets">3x 6-8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=073rhNqcPn0" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Remada curvada neutra com halteres no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/073rhNqcPn0/hqdefault.jpg" alt="Thumbnail do vídeo: Remada curvada neutra com halteres" onerror="this.src='https://img.youtube.com/vi/073rhNqcPn0/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>↻ Bloco 6 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">60s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">6.1</span>
+          <h4>Pulldown polia alta</h4>
+        </div>
+        <span class="sets">3x 8-10</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=H91Qxo8YG5M" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Pulldown polia alta no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/H91Qxo8YG5M/hqdefault.jpg" alt="Thumbnail do vídeo: Pulldown polia alta" onerror="this.src='https://img.youtube.com/vi/H91Qxo8YG5M/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">6.2</span>
+          <h4>Remada alta polia baixa</h4>
+        </div>
+        <span class="sets">3x 8-10</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=ZOuBEpIIwBo" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Remada alta polia baixa no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/ZOuBEpIIwBo/hqdefault.jpg" alt="Thumbnail do vídeo: Remada alta polia baixa" onerror="this.src='https://img.youtube.com/vi/ZOuBEpIIwBo/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+    </section>
+
+    <section class="workout-section" id="treino-2">
+      <div class="workout-title">
+        <span>Treino 2</span>
+        <h2>Pernas — foco anterior e unilateral</h2>
+        <div class="muscle-groups" aria-label="Grupos musculares trabalhados no Treino 2">
+          <span class="muscle-chip">Quadríceps</span>
+          <span class="muscle-chip">Glúteos</span>
+          <span class="muscle-chip">Adutores</span>
+          <span class="muscle-chip">Abdutores</span>
+          <span class="muscle-chip">Core</span>
+          <span class="muscle-chip">Mobilidade de quadril</span>
+        </div>
+      </div>
+      <div class="section-label">Aquecimento / Preparação</div>
+      
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Preparação do movimento</span>
+          <h3>↻ Bloco 1 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">Descanso não informado</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">1.1</span>
+          <h4>Alongamento pigeon no solo</h4>
+        </div>
+        <span class="sets">2x 30s</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=G3jV0xIUTUE" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Alongamento pigeon no solo no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/G3jV0xIUTUE/hqdefault.jpg" alt="Thumbnail do vídeo: Alongamento pigeon no solo" onerror="this.src='https://img.youtube.com/vi/G3jV0xIUTUE/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">1.2</span>
+          <h4>Frog mobility</h4>
+        </div>
+        <span class="sets">2x 10</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=VBMhdjfG-7M" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Frog mobility no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/VBMhdjfG-7M/hqdefault.jpg" alt="Thumbnail do vídeo: Frog mobility" onerror="this.src='https://img.youtube.com/vi/VBMhdjfG-7M/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Preparação do movimento</span>
+          <h3>↻ Bloco 2 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">30s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">2.1</span>
+          <h4>Russian baby maker</h4>
+        </div>
+        <span class="sets">2x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=WJAR_m38wo4" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Russian baby maker no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/WJAR_m38wo4/hqdefault.jpg" alt="Thumbnail do vídeo: Russian baby maker" onerror="this.src='https://img.youtube.com/vi/WJAR_m38wo4/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">2.2</span>
+          <h4>Agachamento overhead bastão</h4>
+        </div>
+        <span class="sets">2x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=0nwWq4xze4M" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Agachamento overhead bastão no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/0nwWq4xze4M/hqdefault.jpg" alt="Thumbnail do vídeo: Agachamento overhead bastão" onerror="this.src='https://img.youtube.com/vi/0nwWq4xze4M/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+      <div class="section-label">Treino principal</div>
+      
+    <section class="combo-card ">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>• Bloco 3 <em>Individual</em></h3>
+        </div>
+        <div class="rest-badge">90s após o exercício</div>
+      </div>
+      <p class='combo-note'>Execute este exercício e faça o descanso indicado.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">3</span>
+          <h4>Afundo com step no pé da frente</h4>
+        </div>
+        <span class="sets">3x 6/6</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=dcFYmQjUKdY" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Afundo com step no pé da frente no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/dcFYmQjUKdY/hqdefault.jpg" alt="Thumbnail do vídeo: Afundo com step no pé da frente" onerror="this.src='https://img.youtube.com/vi/dcFYmQjUKdY/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>↻ Bloco 4 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">90s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">4.1</span>
+          <h4>Leg horizontal unilateral</h4>
+        </div>
+        <span class="sets">3x 8/8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=cthHAVKlu2s" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Leg horizontal unilateral no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/cthHAVKlu2s/hqdefault.jpg" alt="Thumbnail do vídeo: Leg horizontal unilateral" onerror="this.src='https://img.youtube.com/vi/cthHAVKlu2s/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">4.2</span>
+          <h4>Goblet squat</h4>
+        </div>
+        <span class="sets">3x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=HE7JTnLmMxg" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Goblet squat no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/HE7JTnLmMxg/hqdefault.jpg" alt="Thumbnail do vídeo: Goblet squat" onerror="this.src='https://img.youtube.com/vi/HE7JTnLmMxg/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card ">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>• Bloco 5 <em>Individual</em></h3>
+        </div>
+        <div class="rest-badge">60s após o exercício</div>
+      </div>
+      <p class='combo-note'>Execute este exercício e faça o descanso indicado.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">5</span>
+          <h4>Avanço alternado com halteres</h4>
+        </div>
+        <span class="sets">3x 6/6</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=aClEMrDB6F8" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Avanço alternado com halteres no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/aClEMrDB6F8/hqdefault.jpg" alt="Thumbnail do vídeo: Avanço alternado com halteres" onerror="this.src='https://img.youtube.com/vi/aClEMrDB6F8/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>↻ Bloco 6 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">60s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">6.1</span>
+          <h4>Cadeira extensora unilateral</h4>
+        </div>
+        <span class="sets">3x 8/8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=Os_byCyi6MI" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Cadeira extensora unilateral no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/Os_byCyi6MI/hqdefault.jpg" alt="Thumbnail do vídeo: Cadeira extensora unilateral" onerror="this.src='https://img.youtube.com/vi/Os_byCyi6MI/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">6.2</span>
+          <h4>Cadeira extensora bilateral</h4>
+        </div>
+        <span class="sets">3x 12</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=wYbQmMnjsH8" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Cadeira extensora bilateral no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/wYbQmMnjsH8/hqdefault.jpg" alt="Thumbnail do vídeo: Cadeira extensora bilateral" onerror="this.src='https://img.youtube.com/vi/wYbQmMnjsH8/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+    </section>
+
+    <section class="workout-section" id="treino-3">
+      <div class="workout-title">
+        <span>Treino 3</span>
+        <h2>Peito, ombros e tríceps</h2>
+        <div class="muscle-groups" aria-label="Grupos musculares trabalhados no Treino 3">
+          <span class="muscle-chip">Peitoral</span>
+          <span class="muscle-chip">Ombros / deltoides</span>
+          <span class="muscle-chip">Tríceps</span>
+          <span class="muscle-chip">Manguito rotador</span>
+          <span class="muscle-chip">Core</span>
+          <span class="muscle-chip">Estabilizadores do ombro</span>
+        </div>
+      </div>
+      <div class="section-label">Aquecimento / Preparação</div>
+      
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Preparação do movimento</span>
+          <h3>↻ Bloco 1 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">Descanso não informado</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">1.1</span>
+          <h4>Rotação de tronco em decúbito lateral</h4>
+        </div>
+        <span class="sets">2x 8/8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=qemjQ41m-9c" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Rotação de tronco em decúbito lateral no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/qemjQ41m-9c/hqdefault.jpg" alt="Thumbnail do vídeo: Rotação de tronco em decúbito lateral" onerror="this.src='https://img.youtube.com/vi/qemjQ41m-9c/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">1.2</span>
+          <h4>Prancha tocando nos ombros</h4>
+        </div>
+        <span class="sets">2x 8/8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=NO6XG9RXnjk" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Prancha tocando nos ombros no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/NO6XG9RXnjk/hqdefault.jpg" alt="Thumbnail do vídeo: Prancha tocando nos ombros" onerror="this.src='https://img.youtube.com/vi/NO6XG9RXnjk/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Preparação do movimento</span>
+          <h3>↻ Bloco 2 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">30s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">2.1</span>
+          <h4>Rotação cubana halteres</h4>
+        </div>
+        <span class="sets">2x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=_r3sqslb4iQ" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Rotação cubana halteres no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/_r3sqslb4iQ/hqdefault.jpg" alt="Thumbnail do vídeo: Rotação cubana halteres" onerror="this.src='https://img.youtube.com/vi/_r3sqslb4iQ/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">2.2</span>
+          <h4>Flexão de braço no smith</h4>
+        </div>
+        <span class="sets">2x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=r64y1x8D_F8" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Flexão de braço no smith no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/r64y1x8D_F8/hqdefault.jpg" alt="Thumbnail do vídeo: Flexão de braço no smith" onerror="this.src='https://img.youtube.com/vi/r64y1x8D_F8/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+      <div class="section-label">Treino principal</div>
+      
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>↻ Bloco 3 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">90s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">3.1</span>
+          <h4>Supino reto unilateral halter</h4>
+        </div>
+        <span class="sets">3x 6/6</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=6kUsr6J_U6o" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Supino reto unilateral halter no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/6kUsr6J_U6o/hqdefault.jpg" alt="Thumbnail do vídeo: Supino reto unilateral halter" onerror="this.src='https://img.youtube.com/vi/6kUsr6J_U6o/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">3.2</span>
+          <h4>Crucifixo reto halteres pegada neutra</h4>
+        </div>
+        <span class="sets">3x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=_kpKlYexyXs" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Crucifixo reto halteres pegada neutra no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/_kpKlYexyXs/hqdefault.jpg" alt="Thumbnail do vídeo: Crucifixo reto halteres pegada neutra" onerror="this.src='https://img.youtube.com/vi/_kpKlYexyXs/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card ">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>• Bloco 4 <em>Individual</em></h3>
+        </div>
+        <div class="rest-badge">90s após o exercício</div>
+      </div>
+      <p class='combo-note'>Execute este exercício e faça o descanso indicado.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">4</span>
+          <h4>Desenvolvimento aberto barra</h4>
+        </div>
+        <span class="sets">3x 6-8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=o2LfBH1I8r8" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Desenvolvimento aberto barra no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/o2LfBH1I8r8/hqdefault.jpg" alt="Thumbnail do vídeo: Desenvolvimento aberto barra" onerror="this.src='https://img.youtube.com/vi/o2LfBH1I8r8/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>↻ Bloco 5 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">90s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">5.1</span>
+          <h4>Desenvolvimento Arnold</h4>
+        </div>
+        <span class="sets">3x 6-8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=IIdj90AJArU" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Desenvolvimento Arnold no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/IIdj90AJArU/hqdefault.jpg" alt="Thumbnail do vídeo: Desenvolvimento Arnold" onerror="this.src='https://img.youtube.com/vi/IIdj90AJArU/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">5.2</span>
+          <h4>Elevação lateral halteres</h4>
+        </div>
+        <span class="sets">3x 6-8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=lj114PlX_Jk" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Elevação lateral halteres no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/lj114PlX_Jk/hqdefault.jpg" alt="Thumbnail do vídeo: Elevação lateral halteres" onerror="this.src='https://img.youtube.com/vi/lj114PlX_Jk/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>↻ Bloco 6 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">60s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">6.1</span>
+          <h4>Tríceps corda</h4>
+        </div>
+        <span class="sets">3x 8-10</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=KhK5HWJfsrQ" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Tríceps corda no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/KhK5HWJfsrQ/hqdefault.jpg" alt="Thumbnail do vídeo: Tríceps corda" onerror="this.src='https://img.youtube.com/vi/KhK5HWJfsrQ/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">6.2</span>
+          <h4>Lift polia baixa</h4>
+        </div>
+        <span class="sets">3x 8/8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=kFMVrSdDf8k" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Lift polia baixa no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/kFMVrSdDf8k/hqdefault.jpg" alt="Thumbnail do vídeo: Lift polia baixa" onerror="this.src='https://img.youtube.com/vi/kFMVrSdDf8k/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+    </section>
+
+    <section class="workout-section" id="treino-4">
+      <div class="workout-title">
+        <span>Treino 4</span>
+        <h2>Posterior de coxa, glúteos e panturrilha</h2>
+        <div class="muscle-groups" aria-label="Grupos musculares trabalhados no Treino 4">
+          <span class="muscle-chip">Posterior de coxa</span>
+          <span class="muscle-chip">Glúteos</span>
+          <span class="muscle-chip">Panturrilhas</span>
+          <span class="muscle-chip">Lombar / eretores</span>
+          <span class="muscle-chip">Core</span>
+          <span class="muscle-chip">Mobilidade posterior</span>
+        </div>
+      </div>
+      <div class="section-label">Aquecimento / Preparação</div>
+      
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Preparação do movimento</span>
+          <h3>↻ Bloco 1 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">Descanso não informado</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">1.1</span>
+          <h4>Alongamento pigeon na caixa</h4>
+        </div>
+        <span class="sets">2x 30s</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=ua02B_3as6A" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Alongamento pigeon na caixa no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/ua02B_3as6A/hqdefault.jpg" alt="Thumbnail do vídeo: Alongamento pigeon na caixa" onerror="this.src='https://img.youtube.com/vi/ua02B_3as6A/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">1.2</span>
+          <h4>Caminhada com as mãos</h4>
+        </div>
+        <span class="sets">2x 6</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=0M8kgFpNJoo" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Caminhada com as mãos no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/0M8kgFpNJoo/hqdefault.jpg" alt="Thumbnail do vídeo: Caminhada com as mãos" onerror="this.src='https://img.youtube.com/vi/0M8kgFpNJoo/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Preparação do movimento</span>
+          <h3>↻ Bloco 2 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">30s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">2.1</span>
+          <h4>Elevação pélvica na bola suíça</h4>
+        </div>
+        <span class="sets">2x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=IZmOWE96CVI" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Elevação pélvica na bola suíça no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/IZmOWE96CVI/hqdefault.jpg" alt="Thumbnail do vídeo: Elevação pélvica na bola suíça" onerror="this.src='https://img.youtube.com/vi/IZmOWE96CVI/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">2.2</span>
+          <h4>Flexão de joelho na bola suíça</h4>
+        </div>
+        <span class="sets">2x 8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=Ou2KMMKXCwE" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Flexão de joelho na bola suíça no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/Ou2KMMKXCwE/hqdefault.jpg" alt="Thumbnail do vídeo: Flexão de joelho na bola suíça" onerror="this.src='https://img.youtube.com/vi/Ou2KMMKXCwE/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+      <div class="section-label">Treino principal</div>
+      
+    <section class="combo-card ">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>• Bloco 3 <em>Individual</em></h3>
+        </div>
+        <div class="rest-badge">90s após o exercício</div>
+      </div>
+      <p class='combo-note'>Execute este exercício e faça o descanso indicado.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">3</span>
+          <h4>Hip-thruster</h4>
+        </div>
+        <span class="sets">3x 6-8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=un4sFDkGlVY" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Hip-thruster no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/un4sFDkGlVY/hqdefault.jpg" alt="Thumbnail do vídeo: Hip-thruster" onerror="this.src='https://img.youtube.com/vi/un4sFDkGlVY/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>↻ Bloco 4 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">90s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">4.1</span>
+          <h4>Mesa flexora</h4>
+        </div>
+        <span class="sets">3x 6-8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=2-ULaRrQa7c" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Mesa flexora no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/2-ULaRrQa7c/hqdefault.jpg" alt="Thumbnail do vídeo: Mesa flexora" onerror="this.src='https://img.youtube.com/vi/2-ULaRrQa7c/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">4.2</span>
+          <h4>Panturrilha em pé no step</h4>
+        </div>
+        <span class="sets">3x 15</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=1BRdyeKehb0" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Panturrilha em pé no step no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/1BRdyeKehb0/hqdefault.jpg" alt="Thumbnail do vídeo: Panturrilha em pé no step" onerror="this.src='https://img.youtube.com/vi/1BRdyeKehb0/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card ">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>• Bloco 5 <em>Individual</em></h3>
+        </div>
+        <div class="rest-badge">60s após o exercício</div>
+      </div>
+      <p class='combo-note'>Execute este exercício e faça o descanso indicado.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">5</span>
+          <h4>Stiff com halteres</h4>
+        </div>
+        <span class="sets">3x 6-8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=cETLf4xXYCQ" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Stiff com halteres no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/cETLf4xXYCQ/hqdefault.jpg" alt="Thumbnail do vídeo: Stiff com halteres" onerror="this.src='https://img.youtube.com/vi/cETLf4xXYCQ/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+
+    <section class="combo-card is-combo">
+      <div class="combo-head">
+        <div>
+          <span class="mini-label">Parte principal</span>
+          <h3>↻ Bloco 6 <em>Combinado</em></h3>
+        </div>
+        <div class="rest-badge">60s após completar o bloco</div>
+      </div>
+      <p class='combo-note'>Faça os exercícios deste bloco em sequência. Descanse apenas ao final do bloco.</p>
+      <div class="exercise-grid">
+        
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">6.1</span>
+          <h4>Cadeira flexora unilateral</h4>
+        </div>
+        <span class="sets">3x 8/8</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=g0eu4acDBEQ" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Cadeira flexora unilateral no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/g0eu4acDBEQ/hqdefault.jpg" alt="Thumbnail do vídeo: Cadeira flexora unilateral" onerror="this.src='https://img.youtube.com/vi/g0eu4acDBEQ/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+
+    <article class="exercise-card">
+      <div class="exercise-main">
+        <div>
+          <span class="exercise-code">6.2</span>
+          <h4>Cadeira flexora bilateral</h4>
+        </div>
+        <span class="sets">3x 12</span>
+      </div>
+      <a class="video-card" href="https://www.youtube.com/watch?v=9INkrZI0kPA" target="_blank" rel="noopener noreferrer" aria-label="Abrir vídeo do exercício Cadeira flexora bilateral no YouTube">
+        <img loading="lazy" src="https://img.youtube.com/vi/9INkrZI0kPA/hqdefault.jpg" alt="Thumbnail do vídeo: Cadeira flexora bilateral" onerror="this.src='https://img.youtube.com/vi/9INkrZI0kPA/mqdefault.jpg'">
+        <div class="video-meta">
+          <span>Vídeo demonstrativo</span>
+          <strong>Abrir no YouTube</strong>
+        </div>
+      </a>
+    </article>
+      </div>
+    </section>
+    </section>
+
+      <section class="notes-card">
+        <h2>Observações finais</h2>
+        <p>Hidrate-se bem e procure descansar para progredir no treino. Na preparação, priorize movimentos e cargas leves, pois a ideia é aquecer e preparar o corpo. Na parte principal, o primeiro exercício com repetições mais curtas tem foco em progressão de carga. No restante do treino, trabalhe no limiar das cargas, respeitando os combinados e os descansos.</p>
+      </section>
+    </section>
+
+    <section class="tab-content" id="periodizacao-2">
+      <section class="empty-card">
+        <h2>Periodização 2</h2>
+        <p>Espaço reservado para inserir os treinos quando você enviar o PDF da periodização anterior.</p>
+      </section>
+    </section>
+
+    <section class="tab-content" id="periodizacao-1">
+      <section class="empty-card">
+        <h2>Periodização 1</h2>
+        <p>Espaço reservado para inserir os treinos quando você enviar o PDF da primeira periodização.</p>
+      </section>
+    </section>
+
+    <div class="footer-space"></div>
+  </main>
+
+  <script>
+    (function () {
+      var tabButtons = document.querySelectorAll(".tab-btn");
+      var tabContents = document.querySelectorAll(".tab-content");
+      var jumpPanel = document.querySelector("[data-jump-panel='periodizacao-3']");
+      var jumpButtons = document.querySelectorAll(".jump-btn");
+
+      function activateTab(tabId) {
+        for (var i = 0; i < tabButtons.length; i++) {
+          tabButtons[i].classList.toggle("active", tabButtons[i].getAttribute("data-tab") === tabId);
+        }
+
+        for (var j = 0; j < tabContents.length; j++) {
+          tabContents[j].classList.toggle("active", tabContents[j].id === tabId);
+        }
+
+        if (jumpPanel) {
+          jumpPanel.style.display = tabId === "periodizacao-3" ? "block" : "none";
+        }
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      for (var i = 0; i < tabButtons.length; i++) {
+        tabButtons[i].addEventListener("click", function () {
+          activateTab(this.getAttribute("data-tab"));
+        });
+      }
+
+      for (var k = 0; k < jumpButtons.length; k++) {
+        jumpButtons[k].addEventListener("click", function () {
+          var targetId = this.getAttribute("data-target");
+          var target = document.getElementById(targetId);
+
+          for (var x = 0; x < jumpButtons.length; x++) {
+            jumpButtons[x].classList.remove("active");
+          }
+          this.classList.add("active");
+
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      }
+    })();
+  </script>
+</body>
+</html>
